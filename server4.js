@@ -1,3 +1,4 @@
+//이 방식은 위험(쿠키 노출)
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
