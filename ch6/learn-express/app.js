@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -37,7 +38,7 @@ app.use(express.urlencoded({ extended: false })); // 주소 형식 (쿼리 스�
 app.use(cookieParser());
 //app.use(cookieParser('secret code')); // 서명된(암호화된) 쿠키가 있는 경우, 제공한 문자열을 키로 삼아 복호화할 수 있음.
 
-//NOTE: 세션 관리용 미들웨어 ---> 로그인 등의 이유로 세션 구현할 때 유용. req.session 객체 생성.
+//NOTE: 세션 관리용 미들웨어(cookie-parser 보다 뒤에 위치) ---> 로그인 등의 이유로 세션 구현할 때 유용. req.session 객체 생성.
 //NOTE: req.session.destroy() - 세션 한번에 삭제. | req.sessionID - 세션 ID 확인
 app.use(session({
   resave: false, // 요청이 왔을 때, 수정사항이 생기지 않더라도 세션을 다시 저장할지에 대한 설정
@@ -49,6 +50,9 @@ app.use(session({
   },
   //store 옵션 : 현재는 메모리에 세션 저장(서버 재시작하면 초기화되는 단점) --> 데이터베이스 연결해 세션 유지. 보통 Redis 가 자주 쓰임.
 }));
+
+//NOTE: 일회성 메시지들을 웹 브라우저에 나타낼 때 좋음. (cookie-parser 와 express-session 사용하기 때문에 뒤에 위치)
+app.use(flash()); // 일회성 경고 메시지 보낼 떄 적합
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
