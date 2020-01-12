@@ -4,11 +4,17 @@ const morgan = require('morgan'); // 로깅 모듈
 const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport'); // passport 모듈
 require('dotenv').config(); // .env 파일 참조
 
 const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 
 const app = express();
+sequelize.sync();
+passportConfig(passport);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,8 +35,12 @@ app.use(session({
   },
 }));
 app.use(flash());
+app.use(passport.initialize()); // NOTE: req 객체에 passport 설정 심음.
+app.use(passport.session()); // NOTE: req.session 객체에 passport 정보 저장.
+// NOTE: req.session 객체는 express-session 에서 생성하기 때문에 passport 미들웨어는 express-session  미들웨어보다 뒤에 연결
 
 app.use('/', pageRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

@@ -7,6 +7,8 @@ const sequelize = new Sequelize(
     config.database, config.username, config.password, config,
 );
 
+//NOTE: 데이터베이스 자동 생성 명령어 - sequelize db:create
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.User = require('./user')(sequelize, Sequelize);
