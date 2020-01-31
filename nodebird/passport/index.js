@@ -1,6 +1,7 @@
 //NOTE: 로그인 과정을 어떻게 처리할지 설명하는 파일
 const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
+const github = require('./githubStrategy');
 
 const { User } = require('../models');
 
@@ -30,11 +31,23 @@ module.exports = (passport) => {
     //NOTE: 매 요청 시 실행 - passport.session() 미들웨어가 호출
     //NOTE: serializeUser 에서 세션에 저장했던 id 받아 사용자 정보 조회
     passport.deserializeUser((id, done) => {
-        User.findOne({ where: { id } })
+        User.findOne({
+            where: { id },
+            include: [{
+                model: User,
+                attribute: ['id', 'nick'], // NOTE: 비밀번호 조회 방지
+                as: 'Followers',
+            }, {
+                model: User,
+                attribute: ['id', 'nick'],
+                as: "Followings"
+            }],
+        })
             .then(user => done(null, user)) // req.user 에 저장
             .catch(err => done(err));
     });
 
     local(passport);
     kakao(passport);
+    github(passport);
 };

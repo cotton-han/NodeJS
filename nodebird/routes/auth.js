@@ -61,4 +61,12 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
     res.redirect('/');
 });
 
+router.get('/github', passport.authenticate('github'));
+
+router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+    });
+
 module.exports = router;
