@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const bcrypt = require('bcrypt'); // 비밀번호 암호화 모듈(두번째 인자로 12~31 사이 숫자 입력).. 숫자 클수록 복잡한 암호 & 시간오래걸림
+const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { User } = require('../models');
 
@@ -9,12 +9,12 @@ const router = express.Router();
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
     const { email, nick, password } = req.body;
     try {
-        const exUser = await User.find({ where: { email } });
+        const exUser = await User.findOne({ where: { email } });
         if (exUser) {
             req.flash('joinError', '이미 가입된 이메일입니다.');
             return res.redirect('/join');
         }
-        const hash = await bcrypt.hash(password, 12); // 비밀번호 암호화
+        const hash = await bcrypt.hash(password, 12);
         await User.create({
             email,
             nick,
@@ -58,13 +58,6 @@ router.get('/kakao', passport.authenticate('kakao'));
 router.get('/kakao/callback', passport.authenticate('kakao', {
     failureRedirect: '/',
 }), (req, res) => {
-    res.redirect('/');
-});
-
-router.get('/github', passport.authenticate('github'));
-
-router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/' }), (req, res) => {
-    // Successful authentication, redirect home.
     res.redirect('/');
 });
 
