@@ -21,7 +21,7 @@ app.engine ( 'pug', require ( 'pug') .__express); // NOTE: pug 오류 때문에 
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 8002);
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));

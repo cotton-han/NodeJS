@@ -7,7 +7,7 @@ router.get('/test', async (req, res, next) => {
   try {
     if (!req.session.jwt) { // 세션에 토큰이 없으면
       const tokenResult = await axios.post('http://localhost:8002/v1/token', {
-        clientSecret: process.env.CLIENT_SECRET,
+        clientSecret: process.env.CLIENT_SECRET, // uuidv4로 생성(범용 고유 식별자)
       });
       if (tokenResult.data && tokenResult.data.code === 200) { // 토큰 발급 성공
         req.session.jwt = tokenResult.data.token; // 세션에 토큰 저장

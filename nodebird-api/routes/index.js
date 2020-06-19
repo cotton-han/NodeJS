@@ -26,6 +26,7 @@ router.post('/domain', (req, res, next) => {
         userId: req.user.id,
         host: req.body.host,
         type: req.body.type,
+        // 범용 고유 식별자 : 고유한 문자열을 사용하기 위함
         clientSecret: uuidv4(),
     })
         .then(() => {
