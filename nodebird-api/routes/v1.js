@@ -9,7 +9,7 @@ const router = express.Router();
 //NOTE: v1으로 접근한 모든 요청에 deprecated 응답을 보냄
 //NOTE: 실제 서비스 운영 시에는 v2가 나왔다고 바로 v1을 닫아 버리기보다는 일정한 기간을 두고 옮겨가는 것이 좋음.
 //NOTE: 사용자가 변경된 부분을 자신의 코드에 반영할 시간이 필요하기 때문.
-router.use(deprecated());
+router.use(deprecated);
 
 router.post('/token', async (req, res) => {
     const { clientSecret } = req.body;
